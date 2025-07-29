@@ -1,8 +1,8 @@
 import requests
 from tqdm import tqdm
 
-from config import TRADERS
-from schemas import ParsedQuestUrls, ParsedQuest, ParsedQuestItem
+from .config import TRADERS
+from .schemas import ParsedQuestUrls, ParsedQuest, ParsedQuestItem
 
 
 def parse_traders_urls() -> list[ParsedQuestUrls]:
@@ -59,3 +59,7 @@ def parse_quests_urls(quests_urls: list[ParsedQuestUrls]) -> list[ParsedQuestIte
                     quests=[quest]
                 )  
     return list(items.values())
+
+
+# 'https://tarkov.help/ru/quest/{quest-name}' -> guide
+# 'https://api.tarkov.help/api/ru/quests/{quest-name}' -> info
