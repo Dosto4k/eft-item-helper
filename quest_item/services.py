@@ -1,11 +1,12 @@
 from sqlalchemy import select
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, selectinload
 
 from db import engine
 from item.services import parse_traders_urls, parse_quests_urls
 from item.models import Item
 from item.schemas import ParsedQuestItem, ParsedQuest
 from quest_item.models import QuestItemDetail, Quest, QuestItemAssociation
+from quest_item.schemas import ItemWithDetailSchema, ItemWithDetailAndQuestsSchema
 
 
 def fill_db_tables_related_quests_items():
@@ -92,3 +93,43 @@ def _create_item_with_detail(item_data: ParsedQuestItem) -> Item:
         count_of_found_in_raid=item_data.count_of_found_in_raid
     )
     return item
+
+
+async def get_all_items_with_detail(session: Session) -> list[ItemWithDetailSchema]:
+    """
+    Получает все квестовые предметы с их деталями
+    """
+    items_objects = session.execute(
+        select(Item).options(joinedload(Item.detail))
+    ).scalars()
+    items_schemas = []
+    for item_object in items_objects:
+        item_schema = ItemWithDetailSchema.model_validate(
+            item_object, 
+            from_attributes=True,
+        )
+        items_schemas.append(item_schema)
+    return items_schemas
+
+
+async def get_all_items_with_detail_and_quests(
+    session: Session,
+) -> list[ItemWithDetailAndQuestsSchema]:
+    """
+    Получает все квестовые предметы с их деталями и квестами в которых они используются
+    """
+    items_objects = session.execute(
+        select(Item)
+        .options(
+            joinedload(Item.detail),
+            selectinload(Item.quests).joinedload(QuestItemAssociation.quest),
+        )
+    ).scalars()
+    items_schemas = []
+    for item_object in items_objects:
+        item_schema = ItemWithDetailAndQuestsSchema.model_validate(
+            item_object, 
+            from_attributes=True,
+        )
+        items_schemas.append(item_schema) 
+    return items_schemas
