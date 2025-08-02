@@ -9,7 +9,7 @@ from quest_item.models import QuestItemDetail, Quest, QuestItemAssociation
 from quest_item.schemas import ItemWithDetailSchema, ItemWithDetailAndQuestsSchema
 
 
-def fill_db_tables_related_quests_items():
+def fill_db_tables_related_quests_items() -> None:
     """
     Заполняет таблицы бд связанные с квестовыми предметами данными
     """
@@ -36,7 +36,9 @@ def fill_db_tables_related_quests_items():
             session.commit()
 
 
-def _quest_item_association_is_exists(item: Item, quest: Quest, session: Session) -> bool:
+def _quest_item_association_is_exists(
+    item: Item, quest: Quest, session: Session
+) -> bool:
     """
     Проверяет существует ли ассоциативная таблица quest_item для переданных item и quest
     """
@@ -44,8 +46,8 @@ def _quest_item_association_is_exists(item: Item, quest: Quest, session: Session
         return False
     association_obj = session.execute(
         select(QuestItemAssociation)
-        .where(QuestItemAssociation.item_id==item.id)
-        .where(QuestItemAssociation.quest_id==quest.id)
+        .where(QuestItemAssociation.item_id == item.id)
+        .where(QuestItemAssociation.quest_id == quest.id)
     ).scalar_one_or_none()
     return bool(association_obj)
 
@@ -54,33 +56,26 @@ def _get_quest_by_name_or_none(name: str, session: Session) -> Quest | None:
     """
     Возвращает объект Quest или None если объект Quest не существует
     """
-    quest = session.execute(
-        select(Quest).where(Quest.name==name)
-    ).scalar_one_or_none()
-    return quest
+    return session.execute(select(Quest).where(Quest.name == name)).scalar_one_or_none()
 
 
 def _create_quest(quest_data: ParsedQuest) -> Quest:
     """
     Создаёт объект Quest
     """
-    quest = Quest(
+    return Quest(
         name=quest_data.name,
         guide_url=quest_data.guide_url,
     )
-    return quest
 
 
 def _get_item_with_detail_by_name_or_none(name: str, session: Session) -> Item | None:
     """
     Возвращает объект Item или None если объект Item не существует
     """
-    item = session.execute(
-        select(Item)
-        .where(Item.name==name)
-        .options(joinedload(Item.detail))
+    return session.execute(
+        select(Item).where(Item.name == name).options(joinedload(Item.detail))
     ).scalar_one_or_none()
-    return item
 
 
 def _create_item_with_detail(item_data: ParsedQuestItem) -> Item:
@@ -90,7 +85,7 @@ def _create_item_with_detail(item_data: ParsedQuestItem) -> Item:
     item = Item(name=item_data.name)
     item.detail = QuestItemDetail(
         total_count=item_data.total_count,
-        count_of_found_in_raid=item_data.count_of_found_in_raid
+        count_of_found_in_raid=item_data.count_of_found_in_raid,
     )
     return item
 
@@ -105,7 +100,7 @@ async def get_all_items_with_detail(session: Session) -> list[ItemWithDetailSche
     items_schemas = []
     for item_object in items_objects:
         item_schema = ItemWithDetailSchema.model_validate(
-            item_object, 
+            item_object,
             from_attributes=True,
         )
         items_schemas.append(item_schema)
@@ -119,8 +114,7 @@ async def get_all_items_with_detail_and_quests(
     Получает все квестовые предметы с их деталями и квестами в которых они используются
     """
     items_objects = session.execute(
-        select(Item)
-        .options(
+        select(Item).options(
             joinedload(Item.detail),
             selectinload(Item.quests).joinedload(QuestItemAssociation.quest),
         )
@@ -128,8 +122,8 @@ async def get_all_items_with_detail_and_quests(
     items_schemas = []
     for item_object in items_objects:
         item_schema = ItemWithDetailAndQuestsSchema.model_validate(
-            item_object, 
+            item_object,
             from_attributes=True,
         )
-        items_schemas.append(item_schema) 
+        items_schemas.append(item_schema)
     return items_schemas

@@ -19,7 +19,7 @@ class ParsedQuestItem(BaseSchema):
     name: str
     total_count: int
     count_of_found_in_raid: int
-    quests: list[ParsedQuest] 
+    quests: list[ParsedQuest]
 
 
 class ItemSchema(BaseSchema):

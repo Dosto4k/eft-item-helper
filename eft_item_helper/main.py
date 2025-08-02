@@ -11,14 +11,12 @@ from quest_item import views
 
 
 app = FastAPI()
-app.include_router(
-    views.router
-)
+app.include_router(views.router)
 
 
 if __name__ == "__main__":
-    if '--fill-db' in sys.argv:
+    if "--fill-db" in sys.argv:
         fill_db_tables_related_quests_items()
     else:
         create_all_table()
-        uvicorn.run('main:app', reload=True)
+        uvicorn.run("main:app", reload=True)

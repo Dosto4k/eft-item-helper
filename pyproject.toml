@@ -13,3 +13,11 @@ dependencies = [
     "tqdm>=4.67.1",
     "uvicorn>=0.35.0",
 ]
+
+[tool.ruff.lint]
+select = [
+    "ANN","FAST","ASYNC","B","A",
+    "EXE","ISC","T20","Q","RET",
+    "SIM","TID","ARG","C90","N",
+    "E","W","F","S",
+]
