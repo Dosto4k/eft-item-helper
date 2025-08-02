@@ -21,3 +21,8 @@ select = [
     "SIM","TID","ARG","C90","N",
     "E","W","F","S",
 ]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+]
