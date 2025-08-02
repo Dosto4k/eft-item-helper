@@ -15,6 +15,6 @@ def create_all_table() -> None:
     BaseModel.metadata.create_all(engine)
 
 
-def get_session() -> Generator[Session]:
+def get_session() -> Generator[Session, None, None]:
     with Session(engine) as session:
         yield session
