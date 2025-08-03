@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from db import create_all_table
 from quest_item.services import fill_db_tables_related_quests_items
 from quest_item import views
+from user.models import User  # noqa
 
 
 app = FastAPI()

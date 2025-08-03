@@ -13,3 +13,4 @@ class Item(BaseModel):
         argument="QuestItemDetail", back_populates="item", uselist=False
     )
     quests = relationship(argument="QuestItemAssociation", back_populates="item")
+    users = relationship(argument="UserItemQuestAssociation", back_populates="item")
