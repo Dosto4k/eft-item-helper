@@ -15,8 +15,8 @@ app.include_router(views.router)
 
 
 if __name__ == "__main__":
+    create_all_table()
     if "--fill-db" in sys.argv:
         fill_db_tables_related_quests_items()
     else:
-        create_all_table()
         uvicorn.run("main:app", reload=True)
