@@ -4,8 +4,21 @@ from sqlalchemy.orm import Session
 from auth.schemas import RegisterCredentials
 from auth.utils import get_pw_hash
 from user.models import User, UserItemQuestAssociation
+from user.schemas import UserSchema
 from item.models import Item
 from quest_item.models import QuestItemDetail
+
+
+async def get_user_or_none(username: str, session: Session) -> UserSchema | None:
+    """
+    Возвращает пользователя или None если он не существует
+    """
+    user_obj = session.execute(
+        select(User).where(User.username == username)
+    ).scalar_one_or_none()
+    if user_obj:
+        return UserSchema.model_validate(user_obj, from_attributes=True)
+    return None
 
 
 async def create_user_and_add_quest_items(

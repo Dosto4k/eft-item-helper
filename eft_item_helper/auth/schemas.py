@@ -1,7 +1,8 @@
 import re
+from datetime import datetime
 
 from fastapi.security import HTTPBasicCredentials as BasicCredentials
-from pydantic import field_validator, ValidationInfo
+from pydantic import BaseModel as BaseSchema, field_validator, ValidationInfo
 
 
 class RegisterCredentials(BasicCredentials):
@@ -55,3 +56,13 @@ class RegisterCredentials(BasicCredentials):
                 "Password is too simple it must contain at least 1 special character."
             )
         return password
+
+
+class LoginCredentials(BasicCredentials):
+    pass
+
+
+class SessionAuthSchema(BaseSchema):
+    session_id: str
+    expiry: datetime
+    user_id: int
