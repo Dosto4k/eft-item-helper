@@ -3,6 +3,8 @@ from datetime import datetime, timedelta, timezone
 
 import bcrypt
 
+from auth.config import session_config
+
 
 async def get_pw_hash(password: str) -> str:
     """
@@ -29,4 +31,4 @@ async def get_session_expiry() -> datetime:
     """
     Получает время окончания жизни сессии
     """
-    return datetime.now(timezone.utc) + timedelta(days=14)
+    return datetime.now(timezone.utc) + timedelta(days=session_config.days_of_life)

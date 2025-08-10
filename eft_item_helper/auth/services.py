@@ -8,6 +8,7 @@ from fastapi import HTTPException, status, Request, Depends
 from auth.schemas import LoginCredentials, SessionAuthSchema
 from auth.models import SessionAuth
 from auth.utils import verify_pw, generate_session_id, get_session_expiry
+from auth.config import session_config
 from user.schemas import UserSchema
 from user.services import get_user_or_none
 from user.models import User
@@ -60,7 +61,7 @@ async def get_cookie_session_auth(
     """
     Получает информацию о текущей сессии по cookie
     """
-    session_id = request.cookies.get("session-auth")
+    session_id = request.cookies.get(session_config.cookie_key)
     exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Not authenticated",

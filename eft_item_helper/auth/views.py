@@ -10,6 +10,7 @@ from auth.services import (
     get_current_user,
     delete_session_auth_by_user_if_exists,
 )
+from auth.config import session_config
 from dependencies import SessionDep
 from user.services import create_user_and_add_quest_items
 from user.schemas import UserSchema
@@ -46,7 +47,7 @@ async def login_user(
     user = await authenticate_user(credentials, session)
     session_data = await create_session_auth(user, session)
     response.set_cookie(
-        key="session-auth", value=session_data.session_id, httponly=True
+        key=session_config.cookie_key, value=session_data.session_id, httponly=True
     )
     return {"success": True}
 
@@ -61,5 +62,5 @@ async def logout_user(
     Endpoint для выхода пользователя
     """
     await delete_session_auth_by_user_if_exists(user, session)
-    response.delete_cookie("session-auth")
+    response.delete_cookie(key=session_config.cookie_key)
     return {"success": True}
