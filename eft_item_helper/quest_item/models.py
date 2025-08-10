@@ -15,7 +15,13 @@ class QuestItemDetail(BaseModel):
     total_count: Mapped[int]
     count_of_found_in_raid: Mapped[int]
 
-    item = relationship(argument="Item", back_populates="detail", uselist=False)
+    item = relationship(
+        argument="Item",
+        back_populates="detail",
+        single_parent=True,
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
 
 
 class Quest(BaseModel):
@@ -25,7 +31,11 @@ class Quest(BaseModel):
     name: Mapped[str] = mapped_column(unique=True)
     guide_url: Mapped[str] = mapped_column("guide_url", Text, unique=True)
 
-    items = relationship(argument="QuestItemAssociation", back_populates="quest")
+    items = relationship(
+        argument="QuestItemAssociation",
+        back_populates="quest",
+        cascade="all, delete-orphan",
+    )
 
 
 class QuestItemAssociation(BaseModel):

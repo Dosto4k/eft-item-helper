@@ -10,7 +10,18 @@ class Item(BaseModel):
     name: Mapped[str] = mapped_column(unique=True)
 
     detail = relationship(
-        argument="QuestItemDetail", back_populates="item", uselist=False
+        argument="QuestItemDetail",
+        back_populates="item",
+        uselist=False,
+        cascade="all, delete-orphan",
     )
-    quests = relationship(argument="QuestItemAssociation", back_populates="item")
-    users = relationship(argument="UserItemQuestAssociation", back_populates="item")
+    quests = relationship(
+        argument="QuestItemAssociation",
+        back_populates="item",
+        cascade="all, delete-orphan",
+    )
+    users = relationship(
+        argument="UserItemQuestAssociation",
+        back_populates="item",
+        cascade="all, delete-orphan",
+    )

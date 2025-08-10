@@ -11,7 +11,11 @@ class User(BaseModel):
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
 
-    items = relationship(argument="UserItemQuestAssociation", back_populates="user")
+    items = relationship(
+        argument="UserItemQuestAssociation",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
     session = relationship(
         argument="SessionAuth", back_populates="user", cascade="all, delete-orphan"
     )
