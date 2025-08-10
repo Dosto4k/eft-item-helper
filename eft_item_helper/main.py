@@ -7,12 +7,12 @@ from fastapi import FastAPI
 
 from db import create_all_table
 from quest_item.services import fill_db_tables_related_quests_items
-from quest_item import views
+from quest_item.views import router as quest_item_router
 from auth.views import router as auth_router
 
 
 app = FastAPI()
-app.include_router(views.router)
+app.include_router(quest_item_router)
 app.include_router(auth_router)
 
 
