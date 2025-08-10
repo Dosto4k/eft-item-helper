@@ -32,9 +32,7 @@ async def create_user_and_add_quest_items(
     )
     items_objects = session.execute(select(Item).join(QuestItemDetail)).scalars().all()
     for item_object in items_objects:
-        user_item_association = UserItemQuestAssociation(
-            found_in_raid=0, found_not_in_raid=0
-        )
+        user_item_association = UserItemQuestAssociation()
         user_item_association.item = item_object
         user_object.items.append(user_item_association)
     session.add(user_object)
