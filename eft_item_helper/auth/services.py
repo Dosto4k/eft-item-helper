@@ -9,6 +9,7 @@ from auth.schemas import LoginCredentials, SessionAuthSchema
 from auth.models import SessionAuth
 from auth.utils import verify_pw, generate_session_id, get_session_expiry
 from auth.config import session_config
+from auth.exceptions import InvalidCookieSessionError
 from user.schemas import UserSchema
 from user.services import get_user_or_none
 from user.models import User
@@ -72,9 +73,9 @@ async def get_cookie_session_auth(
         select(SessionAuth).where(SessionAuth.session_id == session_id)
     ).scalar_one_or_none()
     if not session_obj:
-        raise exc
+        raise InvalidCookieSessionError
     if session_obj.expiry.timestamp() <= datetime.now(timezone.utc).timestamp():
-        raise exc
+        raise InvalidCookieSessionError
     return SessionAuthSchema.model_validate(session_obj, from_attributes=True)
 
 
