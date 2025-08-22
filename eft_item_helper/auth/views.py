@@ -1,6 +1,7 @@
-from typing import Annotated
+from typing import Annotated, Any
 
-from fastapi import APIRouter, HTTPException, status, Response, Depends
+from fastapi import APIRouter, HTTPException, status, Response, Depends, Form, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.exc import IntegrityError
 
 from auth.schemas import RegisterCredentials, LoginCredentials
@@ -11,9 +12,11 @@ from auth.services import (
     delete_session_auth_by_user_if_exists,
 )
 from auth.config import session_config
+from auth.forms import LoginForm
 from dependencies import SessionDep
 from user.services import create_user_and_add_quest_items
 from user.schemas import UserSchema
+import settings
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -35,21 +38,46 @@ async def post_register_user(
     return {"success": True}
 
 
+@router.get("/login/")
+async def get_login_user(request: Request) -> HTMLResponse:
+    """
+    Get endpoint для аутентификации пользователей
+    """
+    form = LoginForm()
+    context = {"title": "Аутентификация", "form": form()}
+    return settings.TEMPLATES.TemplateResponse(request, "/auth/login.html", context)
+
+
 @router.post("/login/")
-async def login_user(
-    credentials: LoginCredentials,
+async def post_login_user(
+    request: Request,
+    request_form_data: Annotated[LoginCredentials, Form()],
     session: SessionDep,
-    response: Response,
-) -> dict:
+) -> Response:
     """
-    Endpoint для аутентификации пользователя
+    Post endpoint для аутентификации пользователей
     """
-    user = await authenticate_user(credentials, session)
-    session_data = await create_session_auth(user, session)
-    response.set_cookie(
-        key=session_config.cookie_key, value=session_data.session_id, httponly=True
-    )
-    return {"success": True}
+    form = LoginForm(form_data=request_form_data.model_dump())
+    context: dict[str, Any] = {
+        "title": "Аутентификация",
+    }
+    if form.is_valid():
+        form_data = form.get_form_data()
+        try:
+            user = await authenticate_user(form_data, session)
+        except HTTPException as err:
+            form.non_field_errors.append(err.detail)
+        else:
+            session_data = await create_session_auth(user, session)
+            response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+            response.set_cookie(
+                key=session_config.cookie_key,
+                value=session_data.session_id,
+                httponly=True,
+            )
+            return response
+    context["form"] = form()
+    return settings.TEMPLATES.TemplateResponse(request, "/auth/login.html", context)
 
 
 @router.post("/logout/")

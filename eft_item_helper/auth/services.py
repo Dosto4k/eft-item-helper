@@ -24,7 +24,7 @@ async def authenticate_user(
     """
     auth_exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid Username or Password",
+        detail="Неверное имя пользователя или пароль.",
     )
     user = await get_user_or_none(credentials.username, session)
     if not user:
