@@ -4,6 +4,7 @@ import sys
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from db import create_all_table
 from quest_item.services import fill_db_tables_related_quests_items
@@ -17,6 +18,7 @@ app = FastAPI()
 app.include_router(quest_item_router)
 app.include_router(auth_router)
 app.exception_handlers[InvalidCookieSessionError] = invalid_cookie_session_handler
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 if __name__ == "__main__":
