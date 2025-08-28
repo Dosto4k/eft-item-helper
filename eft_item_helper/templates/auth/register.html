@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block extra_links %}
+<link rel="stylesheet" href="/static/css/auth/style.css">
+{% endblock extra_links %}
+{% block content %}
+<div class="container">
+	<div class="auth-form-container">
+		<div class="auth-title">Регистрация</div>
+		<form class="auth-form" enctype="multipart/form-data" action="/auth/register/" method="post">
+			{% if form.non_fields_errors %}
+			<ul class="auth-non-field-error-list">
+			{% for err in form.non_fields_errors %}
+				<li class="auth-non-field-error-item">{{err}}</li>
+			{% endfor %}
+			</ul>
+			{% endif %}
+			{% for field in form.fields %}
+			<div class="auth-input-group">
+				<div>
+					{{field.label | safe}}
+					{{field.input | safe}}
+				</div>
+				{% if field.errors %}
+				<ul class="auth-field-error-list">
+				{% for error in field.errors %}
+					<li class="auth-field-error-item">{{error}}</li>
+				{% endfor %}
+				</ul>
+				{% endif %}
+			</div>
+			{% endfor %}
+			<button class="auth-submit-btn" type="submit">Войти</button>
+		</form>
+	</div>
+</div>
+{% endblock content %}
