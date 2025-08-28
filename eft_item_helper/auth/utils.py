@@ -1,9 +1,9 @@
-import uuid
 from datetime import datetime, timedelta, timezone
+import uuid
 
 import bcrypt
 
-from auth.config import session_config
+from eft_item_helper.auth.config import session_config
 
 
 async def get_pw_hash(password: str) -> str:

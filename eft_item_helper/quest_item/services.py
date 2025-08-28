@@ -1,12 +1,19 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload, selectinload
 
-from db import engine
-from item.services import parse_traders_urls, parse_quests_urls
-from item.models import Item
-from item.schemas import ParsedQuestItem, ParsedQuest
-from quest_item.models import QuestItemDetail, Quest, QuestItemAssociation
-from quest_item.schemas import ItemWithDetailSchema, ItemWithDetailAndQuestsSchema
+from eft_item_helper.db import engine
+from eft_item_helper.item.models import Item
+from eft_item_helper.item.schemas import ParsedQuestItem, ParsedQuest
+from eft_item_helper.item.services import parse_traders_urls, parse_quests_urls
+from eft_item_helper.quest_item.models import (
+    QuestItemDetail,
+    Quest,
+    QuestItemAssociation,
+)
+from eft_item_helper.quest_item.schemas import (
+    ItemWithDetailSchema,
+    ItemWithDetailAndQuestsSchema,
+)
 
 
 def fill_db_tables_related_quests_items() -> None:

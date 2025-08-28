@@ -1,7 +1,7 @@
-from auth.schemas import LoginCredentials, RegisterCredentials
-from forms.forms import BaseForm
-from forms.fields import TextField, PasswordField
-from auth import validators
+from eft_item_helper.auth import validators
+from eft_item_helper.auth.schemas import LoginCredentials, RegisterCredentials
+from eft_item_helper.forms.fields import TextField, PasswordField
+from eft_item_helper.forms.forms import BaseForm
 
 
 class LoginForm(BaseForm[LoginCredentials]):

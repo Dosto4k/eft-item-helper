@@ -1,5 +1,5 @@
-from typing import TypeAlias, TypeVar
 from collections.abc import Callable
+from typing import TypeAlias, TypeVar
 
 from pydantic import BaseModel as BaseSchema
 

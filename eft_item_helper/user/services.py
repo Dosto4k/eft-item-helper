@@ -1,12 +1,12 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from auth.schemas import RegisterCredentials
-from auth.utils import get_pw_hash
-from user.models import User, UserItemQuestAssociation
-from user.schemas import UserSchema
-from item.models import Item
-from quest_item.models import QuestItemDetail
+from eft_item_helper.auth.schemas import RegisterCredentials
+from eft_item_helper.auth.utils import get_pw_hash
+from eft_item_helper.item.models import Item
+from eft_item_helper.quest_item.models import QuestItemDetail
+from eft_item_helper.user.models import User, UserItemQuestAssociation
+from eft_item_helper.user.schemas import UserSchema
 
 
 async def get_user_or_none(username: str, session: Session) -> UserSchema | None:

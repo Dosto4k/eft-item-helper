@@ -1,10 +1,14 @@
 from fastapi import APIRouter
-from quest_item.schemas import ItemWithDetailSchema, ItemWithDetailAndQuestsSchema
-from quest_item.services import (
+
+from eft_item_helper.dependencies import SessionDep
+from eft_item_helper.quest_item.schemas import (
+    ItemWithDetailSchema,
+    ItemWithDetailAndQuestsSchema,
+)
+from eft_item_helper.quest_item.services import (
     get_all_items_with_detail,
     get_all_items_with_detail_and_quests,
 )
-from dependencies import SessionDep
 
 
 router = APIRouter(prefix="/quest-item", tags=["quest-item"])

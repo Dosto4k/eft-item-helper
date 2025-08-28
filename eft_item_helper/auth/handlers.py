@@ -1,8 +1,8 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from auth.exceptions import InvalidCookieSessionError
-from auth.config import session_config
+from eft_item_helper.auth.config import session_config
+from eft_item_helper.auth.exceptions import InvalidCookieSessionError
 
 
 async def invalid_cookie_session_handler(

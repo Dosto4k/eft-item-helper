@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from db import BaseModel
+from eft_item_helper.db import BaseModel
 
 
 class SessionAuth(BaseModel):

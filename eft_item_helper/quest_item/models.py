@@ -4,7 +4,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from db import BaseModel
+from eft_item_helper.db import BaseModel
 
 
 class QuestItemDetail(BaseModel):

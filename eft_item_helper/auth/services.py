@@ -1,19 +1,23 @@
-from typing import Annotated
 from datetime import datetime, timezone
+from typing import Annotated
 
+from fastapi import HTTPException, status, Request, Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status, Request, Depends
 
-from auth.schemas import LoginCredentials, SessionAuthSchema
-from auth.models import SessionAuth
-from auth.utils import verify_pw, generate_session_id, get_session_expiry
-from auth.config import session_config
-from auth.exceptions import InvalidCookieSessionError
-from user.schemas import UserSchema
-from user.services import get_user_or_none
-from user.models import User
-from dependencies import SessionDep
+from eft_item_helper.auth.config import session_config
+from eft_item_helper.auth.exceptions import InvalidCookieSessionError
+from eft_item_helper.auth.models import SessionAuth
+from eft_item_helper.auth.schemas import LoginCredentials, SessionAuthSchema
+from eft_item_helper.auth.utils import (
+    verify_pw,
+    generate_session_id,
+    get_session_expiry,
+)
+from eft_item_helper.dependencies import SessionDep
+from eft_item_helper.user.models import User
+from eft_item_helper.user.schemas import UserSchema
+from eft_item_helper.user.services import get_user_or_none
 
 
 async def authenticate_user(

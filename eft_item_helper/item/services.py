@@ -1,8 +1,8 @@
 import requests
 from tqdm import tqdm
 
-from .config import TRADERS
-from .schemas import ParsedQuestUrls, ParsedQuest, ParsedQuestItem
+from eft_item_helper.item.config import TRADERS
+from eft_item_helper.item.schemas import ParsedQuestUrls, ParsedQuest, ParsedQuestItem
 
 
 def parse_traders_urls() -> list[ParsedQuestUrls]:

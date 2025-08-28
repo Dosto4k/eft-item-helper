@@ -1,7 +1,7 @@
 from pydantic import BaseModel as BaseSchema
 from pydantic_string_url import HttpUrl
 
-from item.schemas import ItemSchema
+from eft_item_helper.item.schemas import ItemSchema
 
 
 class DetailSchema(BaseSchema):

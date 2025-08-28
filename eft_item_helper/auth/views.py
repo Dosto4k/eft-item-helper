@@ -4,19 +4,19 @@ from fastapi import APIRouter, HTTPException, status, Response, Depends, Form, R
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.exc import IntegrityError
 
-from auth.schemas import RegisterCredentials, LoginCredentials
-from auth.services import (
+from eft_item_helper import settings
+from eft_item_helper.auth.config import session_config
+from eft_item_helper.auth.forms import LoginForm, RegisterForm
+from eft_item_helper.auth.schemas import RegisterCredentials, LoginCredentials
+from eft_item_helper.auth.services import (
     authenticate_user,
     create_session_auth,
     get_current_user,
     delete_session_auth_by_user_if_exists,
 )
-from auth.config import session_config
-from auth.forms import LoginForm, RegisterForm
-from dependencies import SessionDep
-from user.services import create_user_and_add_quest_items
-from user.schemas import UserSchema
-import settings
+from eft_item_helper.dependencies import SessionDep
+from eft_item_helper.user.schemas import UserSchema
+from eft_item_helper.user.services import create_user_and_add_quest_items
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
