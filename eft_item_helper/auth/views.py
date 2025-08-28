@@ -1,21 +1,20 @@
 from typing import Annotated, Any
 
-from fastapi import APIRouter, HTTPException, status, Response, Depends, Form, Request
+from fastapi import APIRouter, HTTPException, status, Response, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.exc import IntegrityError
 
+from eft_item_helper.auth.dependencies import CurrentUserDep
 from eft_item_helper.auth.config import session_config
 from eft_item_helper.auth.forms import LoginForm, RegisterForm
 from eft_item_helper.auth.schemas import RegisterCredentials, LoginCredentials
 from eft_item_helper.auth.services import (
     authenticate_user,
     create_session_auth,
-    get_current_user,
     delete_session_auth_by_user_if_exists,
 )
 from eft_item_helper.dependencies import SessionDep
 from eft_item_helper.settings import templates
-from eft_item_helper.user.schemas import UserSchema
 from eft_item_helper.user.services import create_user_and_add_quest_items
 
 
@@ -103,7 +102,7 @@ async def post_login_user(
 
 @router.post("/logout/")
 async def logout_user(
-    user: Annotated[UserSchema, Depends(get_current_user)],
+    user: CurrentUserDep,
     session: SessionDep,
     response: Response,
 ) -> dict:
