@@ -1,11 +1,10 @@
-#!/usr/bin/env -S uv run --script
-
 import sys
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 
+from eft_item_helper.settings import static_config, APP_MODULE
 from eft_item_helper.auth.exceptions import InvalidCookieSessionError
 from eft_item_helper.auth.handlers import invalid_cookie_session_handler
 from eft_item_helper.auth.views import router as auth_router
@@ -18,7 +17,11 @@ app = FastAPI()
 app.include_router(quest_item_router)
 app.include_router(auth_router)
 app.exception_handlers[InvalidCookieSessionError] = invalid_cookie_session_handler
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount(
+    static_config.path,
+    StaticFiles(directory=static_config.dir),
+    name=static_config.name,
+)
 
 
 if __name__ == "__main__":
@@ -26,4 +29,4 @@ if __name__ == "__main__":
     if "--fill-db" in sys.argv:
         fill_db_tables_related_quests_items()
     else:
-        uvicorn.run("main:app", reload=True)
+        uvicorn.run(APP_MODULE, reload=True)

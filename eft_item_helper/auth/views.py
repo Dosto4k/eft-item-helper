@@ -4,7 +4,6 @@ from fastapi import APIRouter, HTTPException, status, Response, Depends, Form, R
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.exc import IntegrityError
 
-from eft_item_helper import settings
 from eft_item_helper.auth.config import session_config
 from eft_item_helper.auth.forms import LoginForm, RegisterForm
 from eft_item_helper.auth.schemas import RegisterCredentials, LoginCredentials
@@ -15,6 +14,7 @@ from eft_item_helper.auth.services import (
     delete_session_auth_by_user_if_exists,
 )
 from eft_item_helper.dependencies import SessionDep
+from eft_item_helper.settings import templates
 from eft_item_helper.user.schemas import UserSchema
 from eft_item_helper.user.services import create_user_and_add_quest_items
 
@@ -29,7 +29,7 @@ async def get_register_user(request: Request) -> HTMLResponse:
     """
     form = RegisterForm()
     context = {"title": "Регистрация", "form": form()}
-    return settings.TEMPLATES.TemplateResponse(request, "/auth/register.html", context)
+    return templates.TemplateResponse(request, "/auth/register.html", context)
 
 
 @router.post("/register/")
@@ -56,7 +56,7 @@ async def post_register_user(
                 url="/auth/login/", status_code=status.HTTP_302_FOUND
             )
     context["form"] = form()
-    return settings.TEMPLATES.TemplateResponse(request, "/auth/register.html", context)
+    return templates.TemplateResponse(request, "/auth/register.html", context)
 
 
 @router.get("/login/")
@@ -66,7 +66,7 @@ async def get_login_user(request: Request) -> HTMLResponse:
     """
     form = LoginForm()
     context = {"title": "Аутентификация", "form": form()}
-    return settings.TEMPLATES.TemplateResponse(request, "/auth/login.html", context)
+    return templates.TemplateResponse(request, "/auth/login.html", context)
 
 
 @router.post("/login/")
@@ -98,7 +98,7 @@ async def post_login_user(
             )
             return response
     context["form"] = form()
-    return settings.TEMPLATES.TemplateResponse(request, "/auth/login.html", context)
+    return templates.TemplateResponse(request, "/auth/login.html", context)
 
 
 @router.post("/logout/")

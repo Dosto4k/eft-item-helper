@@ -3,8 +3,10 @@ from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session
 
+from eft_item_helper.settings import db_config
 
-engine = create_engine("sqlite:///database.db", echo=True)
+
+engine = create_engine(**db_config.model_dump())
 
 
 class BaseModel(DeclarativeBase):
